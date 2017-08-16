@@ -1,0 +1,51 @@
+{
+  "name": "eth-hd-wallet",
+  "version": "1.0.0",
+  "description": "Lightweight Ethereum HD wallet implementation based on BIP-44 standard",
+  "main": "index.js",
+  "scripts": {
+    "prepublish": "npm test",
+    "build": "babel -d dist src",
+    "test": "npm run build && mocha --timeout 3000 --ui exports --reporter spec test/**/*.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hiddentao/eth-hd-wallet.git"
+  },
+  "keywords": [
+    "ethereum",
+    "wallet",
+    "hd",
+    "bip39",
+    "bip44",
+    "eip85",
+    "cryptocurrency",
+    "bitcoin",
+    "crypto"
+  ],
+  "author": "Ramesh Nair <ram@hiddentao.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/hiddentao/eth-hd-wallet/issues"
+  },
+  "homepage": "https://github.com/hiddentao/eth-hd-wallet#readme",
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-core": "^6.26.0",
+    "babel-eslint": "^7.2.3",
+    "babel-preset-es2015": "^6.24.1",
+    "code": "^4.1.0",
+    "eslint": "^4.4.1",
+    "eslint-config-standard": "^10.2.1",
+    "eslint-plugin-import": "^2.7.0",
+    "eslint-plugin-node": "^5.1.1",
+    "eslint-plugin-promise": "^3.5.0",
+    "eslint-plugin-standard": "^3.0.1",
+    "mocha": "^3.5.0"
+  },
+  "dependencies": {
+    "bitcore-lib": "^0.14.0",
+    "bitcore-mnemonic": "^1.2.5",
+    "elliptic": "^6.4.0"
+  }
+}

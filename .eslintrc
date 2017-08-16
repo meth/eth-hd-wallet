@@ -1,0 +1,18 @@
+{
+  "extends": "standard",
+  "parser": "babel-eslint",
+  "parserOptions": {
+    "ecmaVersion": 6,
+    "ecmaFeatures": {
+      "experimentalObjectRestSpread": true,
+    },
+  },
+  "rules": {
+    "generator-star-spacing": ["error", {"before": true, "after": false}],
+    "no-multiple-empty-lines": 0,
+    "yoda": 0,
+    "comma-dangle": 0,
+    "one-var": 0,
+    "brace-style": 0,
+  }
+}
