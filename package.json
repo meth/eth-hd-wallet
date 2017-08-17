@@ -44,9 +44,7 @@
     "mocha": "^3.5.0"
   },
   "dependencies": {
-    "bitcore-lib": "^0.14.0",
     "bitcore-mnemonic": "^1.2.5",
-    "elliptic": "^6.4.0",
-    "ethereumjs-util": "^5.1.2"
+    "ethereumjs-wallet": "^0.6.0"
   }
 }

@@ -1,4 +1,4 @@
-const { EthHdWallet } = require('../')
+const { EthHdWallet } = require('../')
 
 const { expect } = require('code')
 
@@ -13,6 +13,6 @@ exports['generate addresses'] = {
   'first address': () => {
     const addresses = this.wallet.generateAddresses(1)
 
-    console.log(addresses)
+    expect(addresses).to.equal([ '0xac39b311dceb2a4b2f5d8461c1cdaf756f4f7ae9' ])
   }
 }
