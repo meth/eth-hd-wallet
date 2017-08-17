@@ -1,3 +1,4 @@
+import ethUtil from 'ethereumjs-util'
 import HDKey from 'ethereumjs-wallet/hdkey'
 import Mnemonic from 'bitcore-mnemonic'
 
@@ -108,10 +109,6 @@ export class EthHdWallet {
    * @return {String}
    */
   _sanitizeAddress (addr) {
-    if (2 <= addr.length && addr.substr(0, 2) !== '0x') {
-      addr = `0x${addr}`
-    }
-
-    return addr
+    return ethUtil.addHexPrefix(addr)
   }
 }

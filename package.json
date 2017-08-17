@@ -10,7 +10,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/hiddentao/eth-hd-wallet.git"
+    "url": "git+https://github.com/meth-project/eth-hd-wallet.git"
   },
   "keywords": [
     "ethereum",
@@ -26,9 +26,9 @@
   "author": "Ramesh Nair <ram@hiddentao.com>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/hiddentao/eth-hd-wallet/issues"
+    "url": "https://github.com/meth-project/eth-hd-wallet/issues"
   },
-  "homepage": "https://github.com/hiddentao/eth-hd-wallet#readme",
+  "homepage": "https://github.com/meth-project/eth-hd-wallet#readme",
   "devDependencies": {
     "babel-cli": "^6.26.0",
     "babel-core": "^6.26.0",
@@ -45,6 +45,7 @@
   },
   "dependencies": {
     "bitcore-mnemonic": "^1.2.5",
+    "ethereumjs-util": "^5.1.2",
     "ethereumjs-wallet": "^0.6.0"
   }
 }
