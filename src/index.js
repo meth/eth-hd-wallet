@@ -58,8 +58,19 @@ export class EthHdWallet {
    * Get all addresses.
    * @return {[String]}
    */
-  getAllAddresses () {
+  getAddresses () {
     return this._children.map(k => k.address)
+  }
+
+  /**
+   * Check whether given address is present in current list of generated addresses.
+   * @param  {String}  addr
+   * @return {Boolean}
+   */
+  hasAddress (addr) {
+    addr = this._sanitizeAddress(addr)
+
+    return !!this._children.find(({ address }) => addr === address)
   }
 
 
@@ -76,8 +87,7 @@ export class EthHdWallet {
     let count = num
 
     while (0 <= --count) {
-      const child = this._root.deriveChild(this._nextKeyIndex).getWallet()
-      this._nextKeyIndex++
+      const child = this._root.deriveChild(this._children.length).getWallet()
 
       this._children.push({
         wallet: child,
