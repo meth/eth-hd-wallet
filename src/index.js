@@ -1,4 +1,4 @@
-import Buffer from 'buffer'
+import { Buffer } from 'buffer'
 import { pubToAddress } from 'ethereumjs-util'
 import { HDPrivateKey } from 'bitcore-lib'
 import Mnemonic from 'bitcore-mnemonic'
@@ -34,11 +34,11 @@ export const generateMnemonic = () => {
 export class EthHdWallet {
   /**
    * Construct HD wallet instance from given mnemonic
-   * @param  {String} mnemonicSeed Mnemonic/seed string.
+   * @param  {String} mnemonic Mnemonic/seed string.
    * @return {EthHdWallet}
    */
-  static fromMnemonic (mnemonicSeed) {
-    const { xprivkey } = new Mnemonic(mnemonicSeed).toHDPrivateKey()
+  static fromMnemonic (mnemonic) {
+    const { xprivkey } = new Mnemonic(mnemonic).toHDPrivateKey()
 
     return new EthHdWallet(new HDPrivateKey(xprivkey))
   }
@@ -49,7 +49,7 @@ export class EthHdWallet {
    */
   constructor (hdKey) {
     this.hdKey = hdKey
-    this._nextKeyIndex = -1
+    this._nextKeyIndex = 0
     this._derivedKeys = []
   }
 
@@ -101,7 +101,7 @@ export class EthHdWallet {
       }
     }
 
-    return this._derivedKeys.slice(this._derivedKeys.length - num)
+    return this._derivedKeys.slice(-num)
   }
 
   /**
@@ -114,10 +114,12 @@ export class EthHdWallet {
     const ecKey =
       SECP256K1.keyFromPublic(key.publicKey.toBuffer()).getPublic().toJSON()
 
-    return pubToAddress(Buffer.concat([
+    const addrBuf = pubToAddress(Buffer.concat([
       this._newBuffer32(ecKey[0].toArray()),
       this._newBuffer32(ecKey[1].toArray())
     ]))
+
+    return this._sanitizeAddress(addrBuf.toString('hex'))
   }
 
   /**
@@ -134,10 +136,26 @@ export class EthHdWallet {
       let buf = Buffer.from(array)
 
       if (32 > array.length) {
-        buf = Buffer.concat(Buffer.alloc(32 - array.length), buf)
+        buf = Buffer.concat(Buffer.alloc(32 - array.length, 0), buf)
       }
 
       return buf
     }
+  }
+
+  /**
+   * Sanitize given address.
+   *
+   * This will add `0x` prefix to an address if not already set.
+   *
+   * @param  {String} addr
+   * @return {String}
+   */
+  _sanitizeAddress (addr) {
+    if (2 <= addr.length && addr.substr(0, 2) !== '0x') {
+      addr = `0x${addr}`
+    }
+
+    return addr
   }
 }
