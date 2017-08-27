@@ -10,8 +10,7 @@ Features:
 * Supports custom-generated mnemonics
 * Batch-generate addresses in iterations
 
-
-## Installation
+## Installation
 
 ```shell
 npm install eth-hd-wallet
@@ -89,6 +88,16 @@ wallet.generateAddresses(3)
 wallet.hasAddress('0x1efd1a012a3ab2b3424c2023246d8c834bf58723') /* false */
 wallet.hasAddress('0x26042cb13cc4140a281c0fcc7464074c5e9fd0b4') /* true */
 ```
+
+### getAddressCount(): Get no. of addresses
+
+```js
+wallet.generateAddresses(2)
+wallet.generateAddresses(3)
+
+console.log( wallet.getAddressCount() ) /* 5 */
+```
+
 
 
 ## Acknowledgements

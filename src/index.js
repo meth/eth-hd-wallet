@@ -63,6 +63,16 @@ export class EthHdWallet {
     return this._children.map(k => k.address)
   }
 
+
+  /**
+   * Get no. of addresses.
+   * @return {Number}
+   */
+  getAddressCount () {
+    return this._children.length
+  }
+
+
   /**
    * Check whether given address is present in current list of generated addresses.
    * @param  {String}  addr

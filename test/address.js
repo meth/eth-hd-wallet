@@ -49,5 +49,12 @@ exports['address'] = {
     expect(this.wallet.hasAddress('0xd7c0cd9e7d2701c710d64fc492c7086679bdf7b4')).to.be.true()
     expect(this.wallet.hasAddress('0x26042cb13cc4140a281c0fcc7464074c5e9fd0b4')).to.be.true()
     expect(this.wallet.hasAddress('0x5d0d1a012a3ab2b3424c2023246d8c834bf599d9')).to.be.false()
+  },
+
+  'address count': () => {
+    this.wallet.generateAddresses(5)
+    this.wallet.generateAddresses(3)
+
+    expect(this.wallet.getAddressCount()).to.equal(8)
   }
 }
