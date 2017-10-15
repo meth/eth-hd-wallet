@@ -45,6 +45,7 @@
   },
   "dependencies": {
     "bitcore-mnemonic": "^1.2.5",
+    "ethereumjs-tx": "^1.3.3",
     "ethereumjs-util": "^5.1.2",
     "ethereumjs-wallet": "^0.6.0"
   }

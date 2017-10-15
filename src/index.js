@@ -1,4 +1,5 @@
 import ethUtil from 'ethereumjs-util'
+import EthereumTx from 'ethereumjs-tx'
 import HDKey from 'ethereumjs-wallet/hdkey'
 import Mnemonic from 'bitcore-mnemonic'
 
@@ -69,7 +70,7 @@ export class EthHdWallet {
    * @return {Number}
    */
   getAddressCount () {
-    return this._children.length
+    return this._children.map(k => k.address)
   }
 
 
@@ -82,6 +83,35 @@ export class EthHdWallet {
     addr = this._sanitizeAddress(addr)
 
     return !!this._children.find(({ address }) => addr === address)
+  }
+
+
+  /**
+   * Generate raw transaction for given parameters.
+   *
+   * @param  {String} from From address
+   * @param  {String} [to] If omitted then deploying a contract
+   * @param  {Number} value Amount of wei to send
+   * @param  {String} data Data
+   * @param  {Number} gasLimit Total Gas to use
+   * @param  {Number} gasPrice Gas price (wei per gas unit)
+   *
+   * @return {String} Raw transaction string.
+   */
+  generateSignedTransaction ({ nonce, from, to, value, data, gasLimit, gasPrice, chainId }) {
+    const wallet = this._children.find(({ address }) => from === address)
+
+    if (!wallet) {
+      throw new Error('Invalid from address')
+    }
+
+    const tx = new EthereumTx({
+      nonce, from, to, value, data, gasLimit, gasPrice, chainId
+    })
+
+    tx.sign(wallet.getPrivateKey())
+
+    return tx.serialize()
   }
 
 
