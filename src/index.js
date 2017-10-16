@@ -70,7 +70,7 @@ export class EthHdWallet {
    * @return {Number}
    */
   getAddressCount () {
-    return this._children.map(k => k.address)
+    return this._children.map(k => k.address).length
   }
 
 
@@ -87,7 +87,7 @@ export class EthHdWallet {
 
 
   /**
-   * Generate raw transaction for given parameters.
+   * Generate signed transaction for given parameters.
    *
    * @param  {String} from From address
    * @param  {String} [to] If omitted then deploying a contract
@@ -98,20 +98,20 @@ export class EthHdWallet {
    *
    * @return {String} Raw transaction string.
    */
-  generateSignedTransaction ({ nonce, from, to, value, data, gasLimit, gasPrice, chainId }) {
-    const wallet = this._children.find(({ address }) => from === address)
+  sign ({ nonce, from, to, value, data, gasLimit, gasPrice, chainId }) {
+    const { wallet } = this._children.find(({ address }) => from === address) || {}
 
     if (!wallet) {
       throw new Error('Invalid from address')
     }
 
     const tx = new EthereumTx({
-      nonce, from, to, value, data, gasLimit, gasPrice, chainId
+      nonce, to, value, data, gasLimit, gasPrice, chainId
     })
 
     tx.sign(wallet.getPrivateKey())
 
-    return tx.serialize()
+    return tx.serialize().toString('hex')
   }
 
 
