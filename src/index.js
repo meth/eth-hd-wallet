@@ -95,6 +95,7 @@ export class EthHdWallet {
    * @param  {String} data Data
    * @param  {Number} gasLimit Total Gas to use
    * @param  {Number} gasPrice Gas price (wei per gas unit)
+   * @param  {String} chainId Chain id
    *
    * @return {String} Raw transaction string.
    */
