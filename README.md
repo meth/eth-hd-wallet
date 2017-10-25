@@ -9,6 +9,8 @@ Features:
 * Lightweight, works in Node.js and browsers
 * Supports custom-generated mnemonics
 * Batch-generate addresses in iterations
+* Sign transactions
+* Extensive tests (including testing against a [real Geth instance](https://github.com/hiddentao/geth-private))
 
 ## Installation
 
