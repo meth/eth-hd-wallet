@@ -4,9 +4,11 @@
   "description": "Lightweight Ethereum HD wallet implementation based on BIP-44 standard",
   "main": "index.js",
   "scripts": {
-    "prepublish": "npm test",
-    "build": "babel -d dist src",
-    "test": "npm run build && mocha --timeout 3000 --ui exports --reporter spec test/**/*.js"
+    "build": "babel --ignore test.js --out-dir dist src",
+    "prepublish": "npm run build",
+    "test": "jest",
+    "test:coverage": "jest --coverage",
+    "test:watch": "jest --watch"
   },
   "repository": {
     "type": "git",
@@ -33,6 +35,7 @@
     "babel-cli": "^6.26.0",
     "babel-core": "^6.26.0",
     "babel-eslint": "^7.2.3",
+    "babel-jest-assertions": "0.0.3",
     "babel-preset-es2015": "^6.24.1",
     "code": "^4.1.0",
     "eslint": "^4.4.1",
@@ -41,6 +44,7 @@
     "eslint-plugin-node": "^5.1.1",
     "eslint-plugin-promise": "^3.5.0",
     "eslint-plugin-standard": "^3.0.1",
+    "jest": "^21.2.1",
     "mocha": "^3.5.0"
   },
   "dependencies": {
@@ -48,5 +52,21 @@
     "ethereumjs-tx": "^1.3.3",
     "ethereumjs-util": "^5.1.2",
     "ethereumjs-wallet": "^0.6.0"
+  },
+  "jest": {
+    "roots": [
+      "./src/"
+    ],
+    "testMatch": [
+      "**/?(*.)test.js"
+    ],
+    "collectCoverageFrom": [
+      "**/*.js"
+    ],
+    "coverageReporters": [
+      "html",
+      "text",
+      "text-summary"
+    ]
   }
 }
