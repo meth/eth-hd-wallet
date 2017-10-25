@@ -58,20 +58,26 @@ describe('wallet', () => {
     expect(wallet.getAddressCount()).toEqual(8)
   })
 
-  it('can sign a value transfer', () => {
-    const addresses = wallet.generateAddresses(2)
+  describe('can sign', () => {
+    let addresses
 
-    const rawTx = wallet.sign({
-      from: addresses[0],
-      to: addresses[1],
-      value: 10000000000000000,
-      nonce: '0x0',
-      data: '0x0',
-      gasPrice: 100000000000,
-      gasLimit: 21000,
-      chainId: 1337
+    beforeEach(() => {
+      addresses = wallet.generateAddresses(2)
     })
 
-    expect(rawTx).toEqual('f86d8085174876e80082520894d7c0cd9e7d2701c710d64fc492c7086679bdf7b4872386f26fc1000000820a95a02f905da1924dfb817ec35c2079024d6ceb77e4fe832d698e1f63777c43feca48a005ca84826088a8533e1fd3330bd0e6be8d6857196aa2d9341c63544f71ab0d85')
+    it('a value transfer', () => {
+      const rawTx = wallet.sign({
+        from: addresses[0],
+        to: addresses[1],
+        value: 10000000000000000,
+        nonce: '0x0',
+        data: '0x0',
+        gasPrice: 100000000000,
+        gasLimit: 21000,
+        chainId: 1337
+      })
+
+      expect(rawTx).toEqual('f86d8085174876e80082520894d7c0cd9e7d2701c710d64fc492c7086679bdf7b4872386f26fc1000000820a95a02f905da1924dfb817ec35c2079024d6ceb77e4fe832d698e1f63777c43feca48a005ca84826088a8533e1fd3330bd0e6be8d6857196aa2d9341c63544f71ab0d85')
+    })
   })
 })

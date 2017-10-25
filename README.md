@@ -15,7 +15,7 @@ Features:
 ```shell
 npm install eth-hd-wallet
 ```
-Or if using Yarn:
+Or if using Yarn (we recommend this):
 
 ```shell
 yarn add eth-hd-wallet
@@ -98,7 +98,13 @@ wallet.generateAddresses(3)
 console.log( wallet.getAddressCount() ) /* 5 */
 ```
 
+## Developing
 
+* To run tests: `yarn test`
+* Tests with coverage: `yarn test:coverage`
+* Tests with watcher: `yarn test:watch`
+* Linter: `yarn lint`
+* Build `dist/`: `yarn build`
 
 ## Acknowledgements
 
