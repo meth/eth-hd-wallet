@@ -1,12 +1,18 @@
 language: node_js
 
-branches:
-  only:
-    - master
+# branches:
+#   only:
+#     - master
 
 node_js:
-  - "8"
-  - "stable"
+  - "lts"
+  - "node"
+
+before_install:
+  - sudo apt-get install software-properties-common
+  - sudo apt-get update
+  - sudo add-apt-repository -y ppa:ethereum/ethereum
+  - sudo apt-get install ethereum
 
 script:
   - "npm test"
