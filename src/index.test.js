@@ -1,7 +1,62 @@
-const { EthHdWallet } = require('./')
+import promisify from 'es6-promisify'
+import gethPrivate from 'geth-private'
+import Web3 from 'web3'
+
+import { EthHdWallet } from './'
+
+const CHAIN_ID = 1337
+
+const delay = ms => new Promise(resolve => setTimeout(resolve, ms))
 
 describe('wallet', () => {
+  let geth
+  let web3
   let wallet
+
+  beforeAll(async () => {
+    geth = gethPrivate({
+      autoMine: true,
+      // verbose: true,
+      gethOptions: {
+        port: 60304,
+        rpcport: 58545,
+        networkid: CHAIN_ID,
+        identity: 'eth-hd-wallet'
+      },
+      genesisBlock: {
+        difficulty: '0x100'
+      }
+    })
+
+    await geth.start()
+
+    console.log('Waiting for Geth to be ready ...')
+    await delay(7000)
+    console.log('Geth ready!')
+
+    web3 = new Web3()
+    web3.setProvider(new web3.providers.HttpProvider(`http://localhost:58545`))
+
+    web3.personal.unlockAccountAsync = promisify(web3.personal.unlockAccount, web3.personal)
+    ;[
+      'getBalance', 'sendTransaction', 'sendRawTransaction'
+    ].forEach(f => {
+      web3.eth[`${f}Async`] = promisify(web3.eth[f], web3.eth)
+    })
+
+    web3.eth.getEtherBalanceAsync = a => (
+      web3.eth.getBalanceAsync(a)
+        .then(b => web3.fromWei(b, 'ether').toString())
+    )
+
+    const balance = await web3.eth.getEtherBalanceAsync(web3.eth.coinbase)
+
+    console.log(`Coinbase balance: ${balance}`)
+  })
+
+  afterAll(async () => {
+    await geth.stop()
+  })
 
   beforeEach(() => {
     /*
@@ -61,23 +116,65 @@ describe('wallet', () => {
   describe('can sign', () => {
     let addresses
 
-    beforeEach(() => {
+    beforeEach(async () => {
       addresses = wallet.generateAddresses(2)
+
+      // fill up first address with some eth
+      await web3.personal.unlockAccountAsync(web3.eth.coinbase, '1234')
+      await web3.eth.sendTransactionAsync({
+        from: web3.eth.coinbase,
+        to: addresses[0],
+        value: web3.toWei(3, 'ether')
+      })
+
+      await delay(10000)
+
+      const balance = await web3.eth.getEtherBalanceAsync(addresses[0])
+      console.log(`Starting balance for ${addresses[0]}: ${balance}`)
     })
 
-    it('a value transfer', () => {
+    it('a value transfer tx', async () => {
       const rawTx = wallet.sign({
         from: addresses[0],
         to: addresses[1],
-        value: 10000000000000000,
-        nonce: '0x0',
-        data: '0x0',
-        gasPrice: 100000000000,
-        gasLimit: 21000,
-        chainId: 1337
+        value: 200000000000000000 /* 0.2 eth */,
+        nonce: 0x0,
+        gasPrice: 50000000000 /* 50 gwei */,
+        gasLimit: 21000 /* see https://github.com/ethereum/go-ethereum/blob/master/params/protocol_params.go#L27 */,
+        chainId: CHAIN_ID
       })
 
-      expect(rawTx).toEqual('f86d8085174876e80082520894d7c0cd9e7d2701c710d64fc492c7086679bdf7b4872386f26fc1000000820a95a02f905da1924dfb817ec35c2079024d6ceb77e4fe832d698e1f63777c43feca48a005ca84826088a8533e1fd3330bd0e6be8d6857196aa2d9341c63544f71ab0d85')
+      expect(rawTx).toBeTruthy()
+
+      await web3.eth.sendRawTransactionAsync(rawTx)
+
+      await delay(5000)
+
+      const balance = await web3.eth.getEtherBalanceAsync(addresses[1])
+
+      console.log(`Resulting balance of ${addresses[1]}: ${balance}`)
+
+      expect(balance.toString()).toEqual('0.2')
+    })
+
+    it('a contract creation tx', async () => {
+      const rawTx = wallet.sign({
+        from: addresses[0],
+        value: 0,
+        data: '0x605280600c6000396000f3006000357c010000000000000000000000000000000000000000000000000000000090048063c6888fa114602e57005b60376004356041565b8060005260206000f35b6000600782029050604d565b91905056',
+        nonce: 0x1,
+        gasPrice: 50000000000 /* 50 gwei */,
+        gasLimit: 53000 /* see https://github.com/ethereum/go-ethereum/blob/master/params/protocol_params.go#L28 */,
+        chainId: CHAIN_ID
+      })
+
+      expect(rawTx).toBeTruthy()
+
+      const receipt = await web3.eth.sendRawTransactionAsync(rawTx)
+
+      await delay(5000)
+
+      console.log(receipt)
     })
   })
 })

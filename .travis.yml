@@ -8,14 +8,19 @@ node_js:
   - "lts/*"
   - "node"
 
+cache:
+  directories:
+    - ~/.ethash
+
 before_install:
   - sudo apt-get install software-properties-common
   - sudo add-apt-repository -y ppa:ethereum/ethereum
   - sudo apt-get update
   - sudo apt-get install ethereum
+  - geth makedag 0 ~/.ethash
 
 script:
-  - "npm test"
+  - "yarn test"
 
 notifications:
   email:

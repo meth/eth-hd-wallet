@@ -102,11 +102,18 @@ console.log( wallet.getAddressCount() ) /* 5 */
 
 ## Developing
 
+Ensure you have [geth](https://github.com/ethereum/go-ethereum) installed and
+available in your `PATH`.
+
 * To run tests: `yarn test`
 * Tests with coverage: `yarn test:coverage`
 * Tests with watcher: `yarn test:watch`
 * Linter: `yarn lint`
 * Build `dist/`: `yarn build`
+
+_Note: If you've never installed `geth` before then make
+sure you run `geth makedag 0 ~/.ethash` to generate the DAG needed for mining,
+otherwise the tests will timeout._
 
 ## Acknowledgements
 

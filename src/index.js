@@ -1,6 +1,6 @@
-import ethUtil from 'ethereumjs-util'
+import { addHexPrefix } from 'ethereumjs-util'
+import { fromExtendedKey } from 'ethereumjs-wallet/hdkey'
 import EthereumTx from 'ethereumjs-tx'
-import HDKey from 'ethereumjs-wallet/hdkey'
 import Mnemonic from 'bitcore-mnemonic'
 
 
@@ -38,7 +38,7 @@ export class EthHdWallet {
    * @param  {String} hdKey Extended HD private key
    */
   constructor (xPrivKey) {
-    this._hdKey = HDKey.fromExtendedKey(xPrivKey)
+    this._hdKey = fromExtendedKey(xPrivKey)
     this._root = this._hdKey.derivePath(BIP44_PATH)
     this._children = []
   }
@@ -80,7 +80,7 @@ export class EthHdWallet {
    * @return {Boolean}
    */
   hasAddress (addr) {
-    addr = this._sanitizeAddress(addr)
+    addr = addHexPrefix(addr)
 
     return !!this._children.find(({ address }) => addr === address)
   }
@@ -112,7 +112,7 @@ export class EthHdWallet {
 
     tx.sign(wallet.getPrivateKey())
 
-    return tx.serialize().toString('hex')
+    return addHexPrefix(tx.serialize().toString('hex'))
   }
 
 
@@ -133,23 +133,10 @@ export class EthHdWallet {
 
       this._children.push({
         wallet: child,
-        address: this._sanitizeAddress(child.getAddress().toString('hex'))
+        address: addHexPrefix(child.getAddress().toString('hex'))
       })
     }
 
     return this._children.slice(-num)
-  }
-
-
-  /**
-   * Sanitize given address.
-   *
-   * This will add `0x` prefix to an address if not already set.
-   *
-   * @param  {String} addr
-   * @return {String}
-   */
-  _sanitizeAddress (addr) {
-    return ethUtil.addHexPrefix(addr)
   }
 }

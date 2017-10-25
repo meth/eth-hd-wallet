@@ -38,7 +38,7 @@
     "babel-eslint": "^7.2.3",
     "babel-jest-assertions": "0.0.3",
     "babel-preset-env": "^1.6.1",
-    "code": "^4.1.0",
+    "es6-promisify": "^5.0.0",
     "eslint": "^4.4.1",
     "eslint-config-standard": "^10.2.1",
     "eslint-plugin-import": "^2.7.0",
@@ -47,7 +47,7 @@
     "eslint-plugin-standard": "^3.0.1",
     "geth-private": "^2.0.0",
     "jest": "^21.2.1",
-    "mocha": "^3.5.0"
+    "web3": "0.20.2"
   },
   "dependencies": {
     "bitcore-mnemonic": "^1.2.5",
@@ -69,6 +69,7 @@
       "html",
       "text",
       "text-summary"
-    ]
+    ],
+    "setupTestFrameworkScriptFile": "./.jest/setupTestFramework.js"
   }
 }
