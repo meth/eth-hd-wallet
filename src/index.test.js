@@ -160,11 +160,11 @@ describe('wallet', () => {
     it('a contract creation tx', async () => {
       const rawTx = wallet.sign({
         from: addresses[0],
-        value: 0,
+        value: 0x0,
         data: '0x605280600c6000396000f3006000357c010000000000000000000000000000000000000000000000000000000090048063c6888fa114602e57005b60376004356041565b8060005260206000f35b6000600782029050604d565b91905056',
         nonce: 0x1,
         gasPrice: 50000000000 /* 50 gwei */,
-        gasLimit: 53000 /* see https://github.com/ethereum/go-ethereum/blob/master/params/protocol_params.go#L28 */,
+        gasLimit: 103000 /* see https://github.com/ethereum/go-ethereum/blob/master/params/protocol_params.go#L28 */,
         chainId: CHAIN_ID
       })
 
