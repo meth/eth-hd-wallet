@@ -33,7 +33,7 @@ describe('wallet', () => {
     await geth.start()
 
     console.log('Waiting for Geth to be ready ...')
-    await delay(10000)
+    await delay(20000)
     console.log('Geth ready!')
 
     web3 = new Web3()
@@ -129,7 +129,7 @@ describe('wallet', () => {
         value: web3.toWei(3, 'ether')
       })
 
-      await delay(15000)
+      await delay(20000)
 
       const balance = await web3.eth.getEtherBalanceAsync(addresses[0])
       console.log(`Starting balance for ${addresses[0]}: ${balance}`)
@@ -150,7 +150,7 @@ describe('wallet', () => {
 
       await web3.eth.sendRawTransactionAsync(rawTx)
 
-      await delay(7000)
+      await delay(20000)
 
       const balance = await web3.eth.getEtherBalanceAsync(addresses[1])
 
@@ -178,7 +178,7 @@ describe('wallet', () => {
 
       const txHash = await web3.eth.sendRawTransactionAsync(rawTx)
 
-      await delay(15000)
+      await delay(20000)
 
       console.log(`Contract creation tx hash: ${txHash}`)
 
