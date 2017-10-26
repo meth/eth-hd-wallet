@@ -1,8 +1,10 @@
+import { addHexPrefix } from 'ethereumjs-util'
 import promisify from 'es6-promisify'
 import gethPrivate from 'geth-private'
 import Web3 from 'web3'
 
 import { EthHdWallet } from './'
+import { sampleContract } from './__fixtures__'
 
 const CHAIN_ID = 1337
 
@@ -31,7 +33,7 @@ describe('wallet', () => {
     await geth.start()
 
     console.log('Waiting for Geth to be ready ...')
-    await delay(7000)
+    await delay(10000)
     console.log('Geth ready!')
 
     web3 = new Web3()
@@ -39,7 +41,7 @@ describe('wallet', () => {
 
     web3.personal.unlockAccountAsync = promisify(web3.personal.unlockAccount, web3.personal)
     ;[
-      'getBalance', 'sendTransaction', 'sendRawTransaction'
+      'getBalance', 'sendTransaction', 'sendRawTransaction', 'getTransactionReceipt'
     ].forEach(f => {
       web3.eth[`${f}Async`] = promisify(web3.eth[f], web3.eth)
     })
@@ -127,7 +129,7 @@ describe('wallet', () => {
         value: web3.toWei(3, 'ether')
       })
 
-      await delay(10000)
+      await delay(15000)
 
       const balance = await web3.eth.getEtherBalanceAsync(addresses[0])
       console.log(`Starting balance for ${addresses[0]}: ${balance}`)
@@ -148,7 +150,7 @@ describe('wallet', () => {
 
       await web3.eth.sendRawTransactionAsync(rawTx)
 
-      await delay(5000)
+      await delay(7000)
 
       const balance = await web3.eth.getEtherBalanceAsync(addresses[1])
 
@@ -158,10 +160,14 @@ describe('wallet', () => {
     })
 
     it('a contract creation tx', async () => {
+      /*
+        Contract from https://ethereum.gitbooks.io/frontier-guide/content/compiling_contract.html
+       */
+
       const rawTx = wallet.sign({
         from: addresses[0],
         value: 0x0,
-        data: '0x605280600c6000396000f3006000357c010000000000000000000000000000000000000000000000000000000090048063c6888fa114602e57005b60376004356041565b8060005260206000f35b6000600782029050604d565b91905056',
+        data: addHexPrefix(sampleContract.bytecode),
         nonce: 0x1,
         gasPrice: 50000000000 /* 50 gwei */,
         gasLimit: 103000 /* see https://github.com/ethereum/go-ethereum/blob/master/params/protocol_params.go#L28 */,
@@ -170,11 +176,25 @@ describe('wallet', () => {
 
       expect(rawTx).toBeTruthy()
 
-      const receipt = await web3.eth.sendRawTransactionAsync(rawTx)
+      const txHash = await web3.eth.sendRawTransactionAsync(rawTx)
 
-      await delay(5000)
+      await delay(7000)
 
-      console.log(receipt)
+      const receipt = await web3.eth.getTransactionReceiptAsync(txHash)
+
+      expect(receipt).toBeTruthy()
+
+      const { contractAddress } = receipt
+      expect(contractAddress).toBeTruthy()
+
+      console.log(`Contract at: ${contractAddress}`)
+
+      const contract = web3.eth.contract(sampleContract.abi).at(contractAddress)
+
+      const result = contract.multiply(2)
+
+      expect(result).toBeTruthy()
+      expect(result.toString()).toEqual('14')
     })
   })
 })

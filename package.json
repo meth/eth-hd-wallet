@@ -4,7 +4,7 @@
   "description": "Lightweight Ethereum HD wallet implementation based on BIP-44 standard",
   "main": "index.js",
   "scripts": {
-    "build": "babel --ignore test.js --out-dir dist src",
+    "build": "babel --ignore test.js,__fixtures__ --out-dir dist src",
     "prepublish": "npm run lint && npm run test && npm run build",
     "lint": "eslint ./src",
     "test": "jest",
