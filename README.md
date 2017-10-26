@@ -10,7 +10,7 @@ Features:
 * Supports custom-generated mnemonics
 * Batch-generate addresses in iterations
 * Sign transactions
-* Extensive tests (including testing against a [real Geth instance](https://github.com/hiddentao/geth-private))
+* Comprehensive test coverage
 
 ## Installation
 
@@ -99,6 +99,25 @@ wallet.generateAddresses(3)
 
 console.log( wallet.getAddressCount() ) /* 5 */
 ```
+
+### sign(): Sign a transaction
+
+```js
+const rawTx = wallet.sign({
+  from: '0x...',
+  to: '0x...',
+  value: 200000000000000000,
+  nonce: 0x0,
+  gasPrice: 50000000000,
+  gasLimit: 21000,
+  chainId: 1 /* see https://github.com/ethereum/EIPs/blob/master/EIPS/eip-155.md */
+})
+
+console.log( rawTx ) /* "0x...." */
+
+web3.eth.sendRawTransaction(rawTx, (err) => { ... })
+```
+
 
 ## Developing
 
