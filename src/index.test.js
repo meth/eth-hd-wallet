@@ -180,6 +180,8 @@ describe('wallet', () => {
 
       await delay(7000)
 
+      console.log(`Contract creation tx hash: ${txHash}`)
+
       const receipt = await web3.eth.getTransactionReceiptAsync(txHash)
 
       expect(receipt).toBeTruthy()
