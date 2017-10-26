@@ -178,7 +178,7 @@ describe('wallet', () => {
 
       const txHash = await web3.eth.sendRawTransactionAsync(rawTx)
 
-      await delay(7000)
+      await delay(15000)
 
       console.log(`Contract creation tx hash: ${txHash}`)
 
