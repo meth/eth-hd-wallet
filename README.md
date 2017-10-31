@@ -3,8 +3,6 @@
 [![Build Status](https://secure.travis-ci.org/meth-project/eth-hd-wallet.svg?branch=master)](http://travis-ci.org/meth-project/eth-hd-wallet)
 [![NPM module](https://badge.fury.io/js/eth-hd-wallet.svg)](https://badge.fury.io/js/eth-hd-wallet)
 
-*NOTE: This is still a work-in-progress*
-
 Features:
 * Lightweight, works in Node.js and browsers
 * Supports custom-generated mnemonics
