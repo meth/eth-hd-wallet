@@ -23,7 +23,7 @@ yarn add eth-hd-wallet
 
 ## API
 
-### (static) fromMnemonic(): Generate wallet from mnemonic
+**(static) fromMnemonic(): Generate wallet from mnemonic**
 
 ```js
 const { generateMnemonic, EthHdWallet } = require('eth-hd-wallet')
@@ -35,7 +35,7 @@ console.log( wallet instanceof EthHdWallet ); /* true */
 ```
 
 
-### generateAddresses(): Generating addresses
+**generateAddresses(): Generating addresses**
 
 ```js
 // generate 2 addresses
@@ -49,7 +49,26 @@ console.log( wallet.generateAddresses(2) )
 */
 ```
 
-### getAddresses(): Get all generated addresses
+**discardAddresses(): Discarding addresses**
+
+```js
+// generate 5 addresses
+wallet.generateAddresses(5)
+// discard the last 2 (leaving just the first 3)
+console.log( wallet.discardAddresses(2) )
+
+/*
+[
+  '0xd7c0cd9e7d2701c710d64fc492c7086679bdf7b4',
+  '0x1acfb961c5a8268eac8e09d6241a26cbeff42241',
+]
+*/
+```
+
+_Note: the next time you run `generateAddresses()` it will again generate
+those discarded addresses_.
+
+**getAddresses(): Get all generated addresses**
 
 ```js
 wallet.generateAddresses(2)
@@ -69,7 +88,7 @@ console.log( wallet.getAddresses() )
 */
 ```
 
-### hasAddress(): Check if given address exists in current list of generated addresses
+**hasAddress(): Check if given address exists in current list of generated addresses**
 
 ```js
 wallet.generateAddresses(2)
@@ -89,7 +108,7 @@ wallet.hasAddress('0x1efd1a012a3ab2b3424c2023246d8c834bf58723') /* false */
 wallet.hasAddress('0x26042cb13cc4140a281c0fcc7464074c5e9fd0b4') /* true */
 ```
 
-### getAddressCount(): Get no. of addresses
+**getAddressCount(): Get no. of addresses**
 
 ```js
 wallet.generateAddresses(2)
@@ -98,7 +117,7 @@ wallet.generateAddresses(3)
 console.log( wallet.getAddressCount() ) /* 5 */
 ```
 
-### sign(): Sign a transaction
+**sign(): Sign a transaction**
 
 ```js
 const rawTx = wallet.sign({

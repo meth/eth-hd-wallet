@@ -55,6 +55,21 @@ export class EthHdWallet {
     return newKeys.map(k => k.address)
   }
 
+  /**
+   * Discard generated addresses.
+   *
+   * This is in effect the reverse of `generateAddresses()`.
+   *
+   * @param  {Number} num The number of addresses to remove from the end of the list of addresses.
+   * @return {[String]} The discarded addresses
+   */
+  discardAddresses (num) {
+    const discard = this._children.splice(-num)
+
+    return discard.map(k => k.address)
+  }
+
+
 
   /**
    * Get all addresses.
