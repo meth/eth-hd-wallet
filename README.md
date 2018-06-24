@@ -7,7 +7,8 @@ Features:
 * Lightweight, works in Node.js and browsers
 * Supports custom-generated mnemonics
 * Batch-generate addresses in iterations
-* Sign transactions
+* Sign transactions and data
+* Recover signer public key
 * Comprehensive test coverage
 
 ## Installation
@@ -117,10 +118,10 @@ wallet.generateAddresses(3)
 console.log( wallet.getAddressCount() ) /* 5 */
 ```
 
-**sign(): Sign a transaction**
+**signTransaction(): Sign a transaction**
 
 ```js
-const rawTx = wallet.sign({
+const rawTx = wallet.signTransaction({
   from: '0x...',
   to: '0x...',
   value: 200000000000000000,
@@ -135,6 +136,29 @@ console.log( rawTx ) /* "0x...." */
 web3.eth.sendRawTransaction(rawTx, (err) => { ... })
 ```
 
+**sign(): Sign data**
+
+```js
+const signature = wallet.sign({
+  address: '0x...',
+  data: '...'
+})
+
+console.log( signature ) /* "0x...." */
+```
+
+**recoverSignerPublicKey(): Recover public key (address) of signer**
+
+```js
+const address = '0x...'
+const data = '...'
+
+const signature = wallet.sign({ address, data })
+
+const publicKey = wallet.recoverSignerPublicKey({ signature, data })
+
+console.log( publicKey ) /* will be same as "address" */
+```
 
 ## Developing
 

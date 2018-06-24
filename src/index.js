@@ -1,6 +1,7 @@
 import { addHexPrefix } from 'ethereumjs-util'
 import { fromExtendedKey } from 'ethereumjs-wallet/hdkey'
 import EthereumTx from 'ethereumjs-tx'
+import EthSigUtil from 'eth-sig-util'
 import Mnemonic from 'bitcore-mnemonic'
 
 
@@ -102,7 +103,7 @@ export class EthHdWallet {
 
 
   /**
-   * Generate signed transaction for given parameters.
+   * Sign transaction data.
    *
    * @param  {String} from From address
    * @param  {String} [to] If omitted then deploying a contract
@@ -114,7 +115,7 @@ export class EthHdWallet {
    *
    * @return {String} Raw transaction string.
    */
-  sign ({ nonce, from, to, value, data, gasLimit, gasPrice, chainId }) {
+  signTransaction ({ nonce, from, to, value, data, gasLimit, gasPrice, chainId }) {
     const { wallet } = this._children.find(({ address }) => from === address) || {}
 
     if (!wallet) {
@@ -129,6 +130,39 @@ export class EthHdWallet {
 
     return addHexPrefix(tx.serialize().toString('hex'))
   }
+
+
+  /**
+   * Sign data.
+   *
+   * @param  {String} address Address whos private key to sign with
+   * @param  {String|Buffer|BN} data Data
+   *
+   * @return {String} Signed data..
+   */
+  sign ({ address, data }) {
+    const { wallet } = this._children.find(({ address: a }) => address === a) || {}
+
+    if (!wallet) {
+      throw new Error('Invalid address')
+    }
+
+    return addHexPrefix(EthSigUtil.personalSign(wallet.getPrivateKey(), { data }))
+  }
+
+
+  /**
+   * Recover public key of signing account.
+   *
+   * @param  {String} signature The signed message..
+   * @param  {String|Buffer|BN} data The original input data.
+   *
+   * @return {String} Public signing key.
+   */
+  recoverSignerPublicKey ({ signature, data }) {
+    return EthSigUtil.recoverPersonalSignature({ sig: signature, data })
+  }
+
 
 
   /**

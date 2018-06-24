@@ -61,9 +61,7 @@ describe('wallet', () => {
   })
 
   beforeEach(() => {
-    /*
-      We'll go with a known reliable testset, see https://github.com/MetaMask/metamask-extension/issues/640
-     */
+    // We'll go with a known reliable testset, see https://github.com/MetaMask/metamask-extension/issues/640
     wallet = EthHdWallet.fromMnemonic('radar blur cabbage chef fix engine embark joy scheme fiction master release')
   })
 
@@ -142,7 +140,7 @@ describe('wallet', () => {
     expect(wallet.getAddressCount()).toEqual(8)
   })
 
-  describe('can sign', () => {
+  describe('can sign transactions', () => {
     let addresses
 
     beforeEach(async () => {
@@ -163,7 +161,7 @@ describe('wallet', () => {
     })
 
     it('a value transfer tx', async () => {
-      const rawTx = wallet.sign({
+      const rawTx = wallet.signTransaction({
         from: addresses[0],
         to: addresses[1],
         value: 200000000000000000 /* 0.2 eth */,
@@ -191,7 +189,7 @@ describe('wallet', () => {
         Contract from https://ethereum.gitbooks.io/frontier-guide/content/compiling_contract.html
        */
 
-      const rawTx = wallet.sign({
+      const rawTx = wallet.signTransaction({
         from: addresses[0],
         value: 0x0,
         data: addHexPrefix(sampleContract.bytecode),
@@ -224,6 +222,51 @@ describe('wallet', () => {
 
       expect(result).toBeTruthy()
       expect(result.toString()).toEqual('14')
+    })
+  })
+
+  describe('can sign data', () => {
+    let addresses
+
+    beforeEach(async () => {
+      addresses = wallet.generateAddresses(1)
+
+      // fill up first address with some eth
+      await web3.personal.unlockAccountAsync(web3.eth.coinbase, '1234')
+      await web3.eth.sendTransactionAsync({
+        from: web3.eth.coinbase,
+        to: addresses[0],
+        value: web3.toWei(3, 'ether')
+      })
+
+      await delay(20000)
+
+      const balance = await web3.eth.getEtherBalanceAsync(addresses[0])
+      console.log(`Starting balance for ${addresses[0]}: ${balance}`)
+    })
+
+    it('successfully', async () => {
+      const signedMessage = wallet.sign({
+        address: addresses[0],
+        data: '0xdeadbeef'
+      })
+
+      expect(signedMessage).toEqual(
+        '0x1909736ae2c87a1d4bb579835974a6974a184bb4ba1f4314256bea316c114b7c4e5ba66d83c78d69a7b38250164ff4f261708562b025fbb2bb7c691aa80719221b'
+      )
+    })
+
+    it('and recover the corresponding public key', () => {
+      const data = '0xdeadbeef'
+
+      const signature = wallet.sign({
+        address: addresses[0],
+        data
+      })
+
+      const publicKey = wallet.recoverSignerPublicKey({ signature, data })
+
+      expect(publicKey).toEqual(addresses[0])
     })
   })
 })
