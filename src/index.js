@@ -86,7 +86,7 @@ export class EthHdWallet {
    * @return {Number}
    */
   getAddressCount () {
-    return this._children.map(k => k.address).length
+    return this._children.length
   }
 
 
