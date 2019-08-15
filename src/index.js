@@ -5,9 +5,16 @@ import EthSigUtil from 'eth-sig-util'
 import Mnemonic from 'bitcore-mnemonic'
 
 
-
 // See https://github.com/ethereum/EIPs/issues/85
 const BIP44_PATH = `m/44'/60'/0'/0`
+
+
+/**
+ * Normalize an Etherum address
+ * @param  {String} addr Address
+ * @return {Striung}
+ */
+const normalizeAddress = addr => addr ? addHexPrefix(addr.toLowerCase()) : addr
 
 
 /**
@@ -96,7 +103,7 @@ export class EthHdWallet {
    * @return {Boolean}
    */
   hasAddress (addr) {
-    addr = addHexPrefix(addr)
+    addr = normalizeAddress(addr)
 
     return !!this._children.find(({ address }) => addr === address)
   }
@@ -108,7 +115,7 @@ export class EthHdWallet {
    * @return {Buffer} private key buffer
    */
   getPrivateKey (addr) {
-    addr = addHexPrefix(addr)
+    addr = normalizeAddress(addr)
 
     const { wallet } = this._children.find(({ address: a }) => addr === a) || {}
 
@@ -134,8 +141,8 @@ export class EthHdWallet {
    * @return {String} Raw transaction string.
    */
   signTransaction ({ nonce, from, to, value, data, gasLimit, gasPrice, chainId }) {
-    from = addHexPrefix(from)
-    to = addHexPrefix(to)
+    from = normalizeAddress(from)
+    to = normalizeAddress(to)
 
     const { wallet } = this._children.find(({ address }) => from === address) || {}
 
@@ -162,7 +169,7 @@ export class EthHdWallet {
    * @return {String} Signed data..
    */
   sign ({ address, data }) {
-    address = addHexPrefix(address)
+    address = normalizeAddress(address)
 
     const { wallet } = this._children.find(({ address: a }) => address === a) || {}
 
@@ -205,7 +212,7 @@ export class EthHdWallet {
 
       this._children.push({
         wallet: child,
-        address: addHexPrefix(child.getAddress().toString('hex'))
+        address: normalizeAddress(child.getAddress().toString('hex'))
       })
     }
 

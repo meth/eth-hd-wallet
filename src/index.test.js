@@ -188,7 +188,6 @@ describe('wallet', () => {
       /*
         Contract from https://ethereum.gitbooks.io/frontier-guide/content/compiling_contract.html
        */
-
       const rawTx = wallet.signTransaction({
         from: addresses[0],
         value: 0x0,
@@ -264,8 +263,14 @@ describe('wallet', () => {
       addresses = wallet.generateAddresses(2)
     })
 
-    it('unless invalid public key address', async () => {
+    it('for valid public key', async () => {
       const privateKey = wallet.getPrivateKey(addresses[1])
+
+      expect(privateKey.toString('hex')).toEqual('7d27cb85ef5e8c319099e8c390b3018e646bed8e32594a655294d20a3496b7c2')
+    })
+
+    it('even if case different', async () => {
+      const privateKey = wallet.getPrivateKey(addresses[1].toUpperCase())
 
       expect(privateKey.toString('hex')).toEqual('7d27cb85ef5e8c319099e8c390b3018e646bed8e32594a655294d20a3496b7c2')
     })
