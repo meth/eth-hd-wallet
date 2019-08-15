@@ -230,19 +230,6 @@ describe('wallet', () => {
 
     beforeEach(async () => {
       addresses = wallet.generateAddresses(1)
-
-      // fill up first address with some eth
-      await web3.personal.unlockAccountAsync(web3.eth.coinbase, '1234')
-      await web3.eth.sendTransactionAsync({
-        from: web3.eth.coinbase,
-        to: addresses[0],
-        value: web3.toWei(3, 'ether')
-      })
-
-      await delay(20000)
-
-      const balance = await web3.eth.getEtherBalanceAsync(addresses[0])
-      console.log(`Starting balance for ${addresses[0]}: ${balance}`)
     })
 
     it('successfully', async () => {
@@ -267,6 +254,20 @@ describe('wallet', () => {
       const publicKey = wallet.recoverSignerPublicKey({ signature, data })
 
       expect(publicKey).toEqual(addresses[0])
+    })
+  })
+
+  describe('can get private key', () => {
+    let addresses
+
+    beforeEach(async () => {
+      addresses = wallet.generateAddresses(2)
+    })
+
+    it('unless invalid public key address', async () => {
+      const privateKey = wallet.getPrivateKey(addresses[1])
+
+      expect(privateKey.toString('hex')).toEqual('7d27cb85ef5e8c319099e8c390b3018e646bed8e32594a655294d20a3496b7c2')
     })
   })
 })

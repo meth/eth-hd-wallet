@@ -160,6 +160,17 @@ const publicKey = wallet.recoverSignerPublicKey({ signature, data })
 console.log( publicKey ) /* will be same as "address" */
 ```
 
+**getPrivateKey(): Get private key of address**
+
+```js
+const [ address ] = wallet.generateAddresses(1)
+
+const privateKey = wallet.getPrivateKey(address)
+
+console.log( privateKey.toString('hex') ) /* "123FA..." */
+```
+
+
 ## Developing
 
 Ensure you have [geth](https://github.com/ethereum/go-ethereum) installed and

@@ -1,6 +1,6 @@
 {
   "name": "eth-hd-wallet",
-  "version": "0.4.0",
+  "version": "0.5.0",
   "description": "Lightweight Ethereum HD wallet implementation based on BIP-44 standard",
   "main": "index.js",
   "scripts": {

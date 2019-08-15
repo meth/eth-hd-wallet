@@ -103,6 +103,24 @@ export class EthHdWallet {
 
 
   /**
+   * Get private key for given address.
+   * @param  {String}  addr Public key address
+   * @return {Buffer} private key buffer
+   */
+  getPrivateKey (addr) {
+    addr = addHexPrefix(addr)
+
+    const { wallet } = this._children.find(({ address: a }) => addr === a) || {}
+
+    if (!wallet) {
+      throw new Error('Invalid address')
+    }
+
+    return wallet.getPrivateKey()
+  }
+
+
+  /**
    * Sign transaction data.
    *
    * @param  {String} from From address
@@ -116,6 +134,9 @@ export class EthHdWallet {
    * @return {String} Raw transaction string.
    */
   signTransaction ({ nonce, from, to, value, data, gasLimit, gasPrice, chainId }) {
+    from = addHexPrefix(from)
+    to = addHexPrefix(to)
+
     const { wallet } = this._children.find(({ address }) => from === address) || {}
 
     if (!wallet) {
@@ -141,6 +162,8 @@ export class EthHdWallet {
    * @return {String} Signed data..
    */
   sign ({ address, data }) {
+    address = addHexPrefix(address)
+
     const { wallet } = this._children.find(({ address: a }) => address === a) || {}
 
     if (!wallet) {
